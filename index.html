@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TRAVIO — Precyzja w konstrukcji</title>
+<meta name="description" content="TRAVIO Sp. z o.o. — projektowanie i konstrukcje. Wodzisław Śląski." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1d2a4d;
+    --navy-deep: #141d36;
+    --orange: #d97842;
+    --paper: #f4f1ea;
+    --line: rgba(29, 42, 77, 0.18);
+    --text: #1d2a4d;
+    --muted: #5a6480;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    background: var(--paper);
+    overflow-x: hidden;
+  }
+
+  /* Tło z motywem rysunku technicznego */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(217, 120, 66, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(29, 42, 77, 0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  /* Stage – mieści wizytówkę i strzałki */
+  .stage {
+    position: relative;
+    width: 100%;
+    max-width: 720px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  /* Strzałki nawigacji */
+  .nav-btn {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1.5px solid var(--navy);
+    background: var(--paper);
+    color: var(--navy);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 5;
+  }
+
+  .nav-btn:hover {
+    background: var(--navy);
+    color: var(--paper);
+    transform: scale(1.08);
+  }
+
+  .nav-btn:active { transform: scale(0.95); }
+
+  .nav-btn svg { width: 22px; height: 22px; }
+
+  /* Karta wizytówki – kontener flip */
+  .card-wrap {
+    flex: 1;
+    perspective: 1800px;
+    max-width: 560px;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1.7 / 1;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .card.flipped { transform: rotateY(180deg); }
+
+  .face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow:
+      0 30px 60px -20px rgba(20, 29, 54, 0.3),
+      0 18px 36px -18px rgba(20, 29, 54, 0.2);
+  }
+
+  /* FRONT */
+  .face-front {
+    background: var(--paper);
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Linie konstrukcyjne na froncie */
+  .face-front::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(135deg, transparent 48%, var(--line) 48%, var(--line) 49%, transparent 49%),
+      linear-gradient(45deg, transparent 48%, var(--line) 48%, var(--line) 49%, transparent 49%);
+    pointer-events: none;
+  }
+
+  .front-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .logo-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-shrink: 0;
+  }
+
+  .logo-svg { width: 110px; height: auto; }
+
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    letter-spacing: 4px;
+    color: var(--navy);
+    line-height: 1;
+    margin-top: 4px;
+  }
+
+  .people {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 6px;
+  }
+
+  .person {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--navy);
+    letter-spacing: 0.2px;
+  }
+
+  .contact {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+  }
+
+  .contact a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .contact a:hover { color: var(--orange); }
+
+  .front-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 10.5px;
+    color: var(--navy);
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+  }
+
+  .company-info strong {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+
+  /* TYŁ */
+  .face-back {
+    background: var(--navy);
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--paper);
+    padding: 30px;
+    overflow: hidden;
+  }
+
+  /* Geometryczny wzór na tyle */
+  .face-back::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(45deg, transparent 49%, rgba(244, 241, 234, 0.06) 49%, rgba(244, 241, 234, 0.06) 51%, transparent 51%),
+      linear-gradient(-45deg, transparent 49%, rgba(244, 241, 234, 0.06) 49%, rgba(244, 241, 234, 0.06) 51%, transparent 51%);
+    background-size: 60px 60px;
+  }
+
+  .back-logo {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .back-logo svg {
+    width: 90px;
+    height: auto;
+    margin-bottom: 6px;
+  }
+
+  .back-logo .logo-text {
+    color: var(--paper);
+    font-size: 56px;
+    letter-spacing: 6px;
+  }
+
+  .tagline {
+    position: relative;
+    z-index: 2;
+    margin-top: 28px;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(244, 241, 234, 0.85);
+    font-weight: 500;
+  }
+
+  /* Wskaźnik strony */
+  .indicator {
+    position: absolute;
+    bottom: -36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(29, 42, 77, 0.25);
+    transition: all 0.3s ease;
+  }
+
+  .dot.active {
+    background: var(--orange);
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  /* RWD */
+  @media (max-width: 640px) {
+    main { padding: 20px 8px; }
+    .stage { gap: 6px; }
+    .nav-btn { width: 40px; height: 40px; }
+    .nav-btn svg { width: 16px; height: 16px; }
+    .face-front { padding: 18px 20px; }
+    .front-top { gap: 14px; }
+    .logo-svg { width: 70px; }
+    .logo-text { font-size: 26px; letter-spacing: 3px; }
+    .person { font-size: 13px; }
+    .contact { font-size: 10.5px; }
+    .front-bottom { font-size: 9px; }
+    .back-logo svg { width: 70px; }
+    .back-logo .logo-text { font-size: 40px; letter-spacing: 4px; }
+    .tagline { font-size: 9px; letter-spacing: 2.5px; margin-top: 18px; }
+  }
+
+  /* Animacja wejścia */
+  .card-wrap {
+    animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .nav-btn {
+    animation: fadeIn 1.2s ease 0.3s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+  <main>
+    <div class="stage">
+      <button class="nav-btn" id="prevBtn" aria-label="Poprzednia strona">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="card-wrap">
+        <div class="card" id="card">
+          <!-- FRONT -->
+          <div class="face face-front">
+            <div class="front-top">
+              <div class="logo-block">
+                <!-- Logo: dach kratownicy + T pomarańczowe -->
+                <svg class="logo-svg" viewBox="0 0 200 90" xmlns="http://www.w3.org/2000/svg">
+                  <g stroke="#1d2a4d" stroke-width="3" stroke-linejoin="round" fill="none">
+                    <!-- zewnętrzny trójkąt dachu -->
+                    <path d="M10 70 L100 12 L190 70 Z"/>
+                    <!-- linia pozioma górna -->
+                    <path d="M40 50 L160 50"/>
+                    <!-- ukośne wsporniki -->
+                    <path d="M40 50 L70 30"/>
+                    <path d="M160 50 L130 30"/>
+                    <path d="M70 30 L130 30"/>
+                    <!-- dolne wsporniki -->
+                    <path d="M40 50 L25 70"/>
+                    <path d="M160 50 L175 70"/>
+                  </g>
+                  <!-- T pomarańczowe -->
+                  <g fill="#d97842">
+                    <rect x="80" y="22" width="40" height="9"/>
+                    <rect x="93" y="22" width="14" height="48"/>
+                  </g>
+                </svg>
+                <div class="logo-text">TRAVIO</div>
+              </div>
+
+              <div class="people">
+                <div class="person">Bartosz Lerch</div>
+                <div class="person">Jakub Loman</div>
+                <div class="person">Kamil Foksowicz</div>
+                <div class="contact">
+                  <a href="tel:+48731177085">+48 731 177 085</a><br>
+                  <a href="mailto:biuro@traviopro.net">biuro@traviopro.net</a><br>
+                  <a href="https://traviopro.net">traviopro.net</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="front-bottom">
+              <div class="company-info">
+                <strong>TRAVIO SP. Z O.O.</strong><br>
+                ul. Pszowska 26, 44-300 Wodzisław Śląski<br>
+                NIP: 6472618006
+              </div>
+            </div>
+          </div>
+
+          <!-- TYŁ -->
+          <div class="face face-back">
+            <div class="back-logo">
+              <svg viewBox="0 0 200 90" xmlns="http://www.w3.org/2000/svg">
+                <g stroke="#f4f1ea" stroke-width="3" stroke-linejoin="round" fill="none">
+                  <path d="M10 70 L100 12 L190 70 Z"/>
+                  <path d="M40 50 L160 50"/>
+                  <path d="M40 50 L70 30"/>
+                  <path d="M160 50 L130 30"/>
+                  <path d="M70 30 L130 30"/>
+                  <path d="M40 50 L25 70"/>
+                  <path d="M160 50 L175 70"/>
+                </g>
+                <g fill="#d97842">
+                  <rect x="80" y="22" width="40" height="9"/>
+                  <rect x="93" y="22" width="14" height="48"/>
+                </g>
+              </svg>
+              <div class="logo-text">TRAVIO</div>
+            </div>
+            <div class="tagline">Precyzja w konstrukcji</div>
+          </div>
+        </div>
+
+        <div class="indicator">
+          <span class="dot active" id="dot1"></span>
+          <span class="dot" id="dot2"></span>
+        </div>
+      </div>
+
+      <button class="nav-btn" id="nextBtn" aria-label="Następna strona">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  </main>
+
+<script>
+  const card = document.getElementById('card');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const dot1 = document.getElementById('dot1');
+  const dot2 = document.getElementById('dot2');
+
+  function toggleCard() {
+    card.classList.toggle('flipped');
+    const isFlipped = card.classList.contains('flipped');
+    dot1.classList.toggle('active', !isFlipped);
+    dot2.classList.toggle('active', isFlipped);
+  }
+
+  prevBtn.addEventListener('click', toggleCard);
+  nextBtn.addEventListener('click', toggleCard);
+
+  // Obsługa klawiatury
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') toggleCard();
+  });
+
+  // Swipe na mobile
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    const diff = e.changedTouches[0].screenX - touchStartX;
+    if (Math.abs(diff) > 50) toggleCard();
+  }, { passive: true });
+</script>
+</body>
+</html>
